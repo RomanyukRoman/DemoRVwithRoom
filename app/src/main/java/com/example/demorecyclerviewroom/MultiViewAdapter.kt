@@ -46,11 +46,7 @@ class MultiViewAdapter(private val appViewModel: AppViewModel) : RecyclerView.Ad
     override fun getItemViewType(position: Int): Int {
         return list[position].getType()
     }
-
-    fun OnDeleteItem(item: ItemTypeInterface){
-        appViewModel.deleteItem(item)
-    }
-     inner class UserViewHolder(private val binding: UserBinding, private val appViewModel: AppViewModel): RecyclerView.ViewHolder(binding.root) {
+    class UserViewHolder(private val binding: UserBinding, private val appViewModel: AppViewModel): RecyclerView.ViewHolder(binding.root) {
         fun bind(user: User) {
             binding.userImage.setImageResource(user.image)
             binding.userName.text = user.name
@@ -58,12 +54,12 @@ class MultiViewAdapter(private val appViewModel: AppViewModel) : RecyclerView.Ad
             binding.userCompanyId.text = user.companyId.toString()
 
             itemView.setOnClickListener {
-                OnDeleteItem(user)
+                appViewModel.deleteItem(user)
             }
         }
     }
 
-    inner class CompanyViewHolder(private val binding: CompanyBinding, private val appViewModel: AppViewModel): RecyclerView.ViewHolder(binding.root) {
+    class CompanyViewHolder(private val binding: CompanyBinding, private val appViewModel: AppViewModel): RecyclerView.ViewHolder(binding.root) {
         fun bind(company: Company) {
             binding.companyId.text = company.id.toString()
             binding.companyName.text = company.name
@@ -71,7 +67,7 @@ class MultiViewAdapter(private val appViewModel: AppViewModel) : RecyclerView.Ad
             binding.companyEmail.text = company.email
 
             itemView.setOnClickListener {
-                OnDeleteItem(company)
+                appViewModel.deleteItem(company)
             }
         }
     }
