@@ -18,13 +18,17 @@ class MainActivity : ComponentActivity() {
         val adapter = MultiViewAdapter(viewModel)
         binding.recyclerview.adapter = adapter
         binding.recyclerview.layoutManager = LinearLayoutManager(this)
-        //viewModel.generateData()
-        //viewModel.clearData()
         viewModel.getData()
         viewModel.itemList.observe(this) { itemList ->
             itemList?.let {
                 adapter.submitList(it)
             }
+        }
+        binding.btnClear.setOnClickListener{
+            viewModel.clearData()
+        }
+        binding.btnAddData.setOnClickListener{
+            viewModel.generateData()
         }
     }
 }
