@@ -5,5 +5,5 @@ import retrofit2.http.GET
 
 interface ApiInterface {
     @GET("users")
-    suspend fun getUserData(): List<User>
+    suspend fun getUser(): List<User>
 }

@@ -2,10 +2,7 @@ package com.example.demorecyclerviewroom.room
 
 import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.demorecyclerview.R
 import com.example.demorecyclerviewroom.*
 import com.example.demorecyclerviewroom.retrofit.ApiInterface
@@ -16,7 +13,7 @@ class AppViewModel(app: Application): AndroidViewModel(app) {
 
     private val repo = (app as App).appRepo
 
-    private lateinit var apiInterface: ApiInterface
+    private val apiInterface: ApiInterface = RetrofitInstance.getInstance().create(ApiInterface:: class.java)
 
     private val _itemList = MutableLiveData<ArrayList<ItemTypeInterface>>()
     val itemList: LiveData<ArrayList<ItemTypeInterface>> get() = _itemList
@@ -50,25 +47,26 @@ class AppViewModel(app: Application): AndroidViewModel(app) {
 
     fun generateData(){
         viewModelScope.launch {
-           for (i in 0..10){
-                val companyId = addItem(Company(name = "Company ${i + 1}", number = "+3806123456${i + 1}", email = "company${i + 1}@gmail.com"))
-           }//add correct getuserdata()
+            val rand = (0..9).random()
+            val companyId = addItem(Company(
+                                    name = "Company $rand",
+                                    number = "+3806123456$rand",
+                                    email = "company$rand@gmail.com"))
+            getUser(companyId, rand)
+            getData()
         }
     }
-    private suspend fun getUserData(companyId: Long) {
+    private suspend fun getUser(companyId: Long, rand: Int) {
         try {
-            apiInterface = RetrofitInstance.getInstance().create(ApiInterface:: class.java)
-            val users = apiInterface.getUserData()
-                addItem(
-                    User(
+            val users = apiInterface.getUser()
+                addItem(User(
                         image = R.drawable.user5,
-                        name = users.name,
-                        email = users.email,
+                        name = users[rand].name,
+                        email = users[rand].email,
                         companyId = companyId)
                 )
         } catch (e: Exception) {
             Log.e("API_ERROR", "Request failed: ${e.message}")
         }
     }
-
 }
